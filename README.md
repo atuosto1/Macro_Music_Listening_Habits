@@ -16,14 +16,21 @@ Weekly listening history, artist level play counts, and artist tags were pulled 
 
 ### Key Variables:
 #### From Last.fm:
+
 **Play Share -** a genre's share of a given week's total plays, expressed as a decimal.
+
 **Total Plays -** total plays across all artists in a given week, regardless of genre. 
+
 **Genre -** assigned per artist via keyword-matching on that artist's top Last.fm tag (ex. tags containing "rock," "punk," "grunge," or "britpop" were bucketed into "Rock")
 
 #### From FRED:
+
 **REC -** binary recession indicator (1 = recession, 0 = no recession), NBER/FRED (USREC) 
+
 **UNRATE -** unemployment rate, continuous, FRED (UNRATE) 
+
 **PCE -** Personal Consumption Expenditures price index, logged for % change (inflation), FRED (PCEPI) 
+
 **UMICH -** University of Michigan Consumer Sentiment Index, logged for % change, FRED (UMCSENT)
 
 ## How to Reproduce
