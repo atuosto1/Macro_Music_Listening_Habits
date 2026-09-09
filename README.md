@@ -70,59 +70,59 @@ From this artist tag dictionary I was able to sort each tag into one of nine gen
 
 <img width="981" height="499" alt="image" src="https://github.com/user-attachments/assets/8638d09a-58bd-4fdc-b84b-3863f09a17f1" />
 
-#### Screenshot 2.3
+#### Screenshot 2.3 (Genre Bucket Creator)
 
 ### Step 3: Building Weekly Panel
 Now that every artist is mapped to a genre, I looped back through each week, summed plays by genre and found each genre's share of said week's total listening, creating a panel of one row per genre per week. I exported this panel to a .csv file so that I had a jumping off point when working within the same week, and for visualizing and regressing my data. 
 
 <img width="984" height="854" alt="image" src="https://github.com/user-attachments/assets/63c37786-6e0a-427d-8020-cb8d275fcfe8" />
 
-#### Screenshot 3.1
+#### Screenshot 3.1 (Loop Structure)
 
 <img width="984" height="160" alt="image" src="https://github.com/user-attachments/assets/685f2486-d634-48b6-8466-91bff0a06e1c" />
 
-#### Screenshot 3.2
+#### Screenshot 3.2 (DataFrame Export)
 
 <img width="448" height="430" alt="image" src="https://github.com/user-attachments/assets/d4d6228a-416c-4def-b9bf-7c39b2ca5e64" />
 
-#### Screenshot 3.3
+#### Screenshot 3.3 (CSV Export)
 
 ### Step 4: Merging with FRED Macro Data
 Now that each of the genres had their play shares for each week, I needed to merge it with the macro data from FRED. I pulled each of the respective series using the "fredapi" package, converted them to one data frame that was separated by month and year. I then joined them to the previous data frame which contained artists and genres. I then filtered my data so that I could find data between 2005 and 2025, before saving everything to a .csv file. 
 
 <img width="984" height="432" alt="image" src="https://github.com/user-attachments/assets/4004b628-e64e-4c54-8829-6a0a10bc4833" />
 
-#### Screenshot 4.1
+#### Screenshot 4.1 (FRED Series Pull)
 
 <img width="982" height="625" alt="image" src="https://github.com/user-attachments/assets/51b97c36-aa71-4157-a732-ca1990a704dd" />
 
-#### Screenshot 4.2
+#### Screenshot 4.2 (Panel Merge and CSV Export)
 
 <img width="867" height="704" alt="image" src="https://github.com/user-attachments/assets/b6ee78a0-cbd8-46b8-8a3c-90c283a3b1d0" />
 
-#### Screenshot 4.3
+#### Screenshot 4.3 (Final DataFrame)
 
 ### Step 5: Visualizing Listening Patterns Over Time
-I built five plots in matplotlib/seaborn: a full genre breakdown over time, a cleaner version limited to the top 4 genres, total monthly listening volume, average monthly listening, and a genre-by-year heatmap. NBER recession periods were shaded on each time-series plot for visual reference.
+I built five plots (three of which are shown) in matplotlib/seaborn: a full genre breakdown over time, a cleaner version limited to the top 4 genres, total monthly listening volume, average monthly listening, and a genre-by-year heatmap. NBER recession periods were shaded on each time-series plot for visual reference.
 
 <img width="687" height="493" alt="image" src="https://github.com/user-attachments/assets/956017c4-b398-4608-bdfc-294b0c09eca8" />
 
-#### Screenshot 5.1
+#### Screenshot 5.1 (Top 4 Genres' Play Share Over Time and Monthly Listening Activity, Subplots)
 
 <img width="687" height="483" alt="image" src="https://github.com/user-attachments/assets/1a195d4f-eb41-462f-bbf9-6a1dfdaf3af2" />
 
-#### Screenshot 5.2
+#### Screenshot 5.2 (Genre-by-Year Heatmap)
 
 ### Step 6: Regression Analysis in R
 In R, I ran two sets of linear models: one regressing total monthly plays (and log of total monthly plays) on the recession dummy, unemployment rate, and logged inflation/consumer sentiment. The second model regressed each genre's logged play share on the same macro variables plus logged total plays, run separately per genre (Rock, Metal, Jazz, Hip Hop, Pop, Classical) rather than as a single pooled model with genre fixed effects, since separate regressions were more interpretable at this stage of the project.
 
 <img width="750" height="587" alt="image" src="https://github.com/user-attachments/assets/11ef461a-3d0a-48c2-9113-75470d76ed9f" />
 
-#### Screenshot 6.1
+#### Screenshot 6.1 (Top 4 Genres Regression)
 
 <img width="401" height="556" alt="image" src="https://github.com/user-attachments/assets/7a25f382-3009-4758-ab69-92e85487dfee" />
 
-#### Screenshot 6.2
+#### Screenshot 6.2 (Total Plays Regression)
 
 ## Findings
 Read these as descriptive results about **one individual's listening behavior,** not generalizable claims about how people listen to music during recessions. An individual's listening habits are largely affected by preferences and other factors that would be difficult to control for without survey data. The sample size here is one listener over roughly 20 years, which is enough to fit a regression but not enough to support population-level conclusions.
