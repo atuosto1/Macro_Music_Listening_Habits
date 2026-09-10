@@ -1,0 +1,96 @@
+---
+title: "Alexander Tuosto - Final Project (R)"
+output: html_document
+date: "2026-05-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This first block is to load all of the code into R, filter a little bit (take February of 2005 out to remove outliers), clean up the same way I did for the data in assignment 2, the outlier is just going to skew my data but I want to see results without the outlier.
+```{r}
+library(tidyverse)
+library(stargazer)
+
+totaldata=read.csv('RealFinalDF.csv')
+totaldata %>% filter(str_detect(totaldata$Genre, "Rock"))
+#This filter just shows all of the rock dates that exist in total data, doesnt change the panel though just shows it in the console bar, this code is from lecture notes
+
+truthdata= totaldata %>% filter(Year != 2005 | Month != 2)
+#This filters my february 2005 outliers out so now i have 2 dataframes, next I'll filter where unemployment is 0 because our economy didn't explode and get to 0% unemployment, the government did and the BLS stopped putting data out for like a month
+#https://dplyr.tidyverse.org/reference/filter.html
+truthdata= truthdata %>% filter(UNRATE>0)
+#drop october of 2025, ill be making this a panel and grouping by item
+
+dategroup=truthdata %>% 
+  group_by(Year,Month) %>%
+  summarise(Total.Month.Plays=sum(Play.Share..Number.),REC=first(REC), UNRATE=first(UNRATE), 
+            PCE=first(PCE),UMICH=first(UMICH))
+
+#https://stackoverflow.com/questions/33152620/how-to-group-by-two-columns-in-r
+#This just groups my data into a nice pretty panel that I can use to run my regressions, gets total monthly listening regardless of genre.
+#I do this so that I have a more aggregated dataframe that I can use for my first Regression.
+
+#Below i'm making a different filtered dataset for each genre so that I can run a regression for all of the genres. I didn't want to do LSDV because I thought multiple regressions would be clearer in this project. This could be a potential expansion in the future.
+rockregdata=truthdata %>% 
+  filter(Genre == 'Rock')
+metalregdata=truthdata %>% 
+  filter(Genre == 'Metal')
+jazzregdata=truthdata %>% 
+  filter(Genre == 'Jazz')
+hiphopregdata=truthdata %>% 
+  filter(Genre == 'Hip Hop')
+popregdata=truthdata %>%
+  filter(Genre=='Pop')
+classregdata=truthdata %>% 
+  filter(Genre == 'Classical')
+
+```
+
+Here, I'm actually conducting my regressions. I'm taking the data I filtered for each of the genres and running 2 kinds of regressions. The first is the Regression that sees how total plays changes in recessions, changes in the unemployment rate and percentage changes in the PCE price index and the University of Michigan Consumer Sentiment index.
+
+Variable Definitions:
+Total.Month.Plays = Continuous variable showing sum of all plays in a given month
+REC = Binary Variable showing recessions, 1=recession 0=no recession
+UNRATE = Continuous variable showing Unemployment Rate, Unemployed people/total labor force
+PCE= Continuous variable showing Personal Consumption Expenditures Price Index (logged change is inflation)
+UMICH= Continuous variable showing index for University of Michigan's consumer sentiment survey (logged change is % change in the index)
+Total.Plays= Continuous variable showing total monthly plays for a given month.
+
+```{r}
+#For all of these regressions, I took out the summaries because they will simply be put into my stargazer tables. 
+totalplayreg=lm(Total.Month.Plays ~ REC + UNRATE + log(PCE) + log(UMICH), data=dategroup)
+#Regresses total Plays with a linear model(lm) on the Recession dummy, the U3 Unemployment Rate, the percent change in the PCE price index (inflation) and a percent change in the UMICH survey, it uses the dategroup as its data.
+logtotalplayreg=lm(log(Total.Month.Plays) ~ REC + UNRATE + log(PCE) + log(UMICH), data=dategroup)
+#This is the same regression as above, however it swaps the total month plays for the log of total month plays to see the percentage change for a 1 unit increase in the non-logged variables, and a 1% increase for the logged variables.
+rockplaysharereg= lm(log(Play.Share)~REC+UNRATE+log(Total.Plays)+log(PCE)+log(UMICH), data=rockregdata)
+#logged playshare so i can see how each of these variables change (in this case rock) each genre's play share in % terms.
+#All of the regressions have the same setup with the independent variables, all of the dependent variables are the same, however they correlate to different play shares as the data being used in the regressions is different. 
+popplaysharereg= lm(log(Play.Share)~REC+UNRATE+log(Total.Plays)+log(PCE)+log(UMICH), data=popregdata)
+classplaysharereg= lm(log(Play.Share)~REC+UNRATE+log(Total.Plays)+log(PCE)+log(UMICH), data=classregdata)
+metalplaysharereg= lm(log(Play.Share)~REC+UNRATE+log(Total.Plays)+log(PCE)+log(UMICH), data=metalregdata)
+jazzplaysharereg= lm(log(Play.Share)~REC+UNRATE+log(Total.Plays)+log(PCE)+log(UMICH), data=jazzregdata)
+hiphopplaysharereg=lm(log(Play.Share)~REC+UNRATE+log(Total.Plays)+log(PCE)+log(UMICH), data=hiphopregdata)
+```
+
+Here I'm putting all of my regressions into multiple stargazer outputs based on the relevance each regression has with itself. My first output is the top 4 genres' regression results. The next one is 2 special cases that looked like they exhibited strange behavior during recessions. The final output displays the results that a recession has on total listening in both unit terms and logged terms. 
+
+```{r}
+stargazer(rockplaysharereg,metalplaysharereg,jazzplaysharereg,hiphopplaysharereg, type = "html",dep.var.labels = c(''),column.labels = c('Rock', 'Metal','Jazz','Hip Hop'), dep.var.caption = 'Logged Play Share',out = 'GenreStargazer.html',title = 'Recession\'s Impact on Playshare by Genre: Top 4 Genres')
+
+#This gives me the top 4 genres stargazer table, I changed the labels to be empty because I like how it looks, I made the Caption the Descriptor of the variables and since they are all the same i just had to change the different label names for the genres
+
+stargazer(popplaysharereg,classplaysharereg, type = "html",dep.var.labels = c(''),column.labels = c('Pop', 'Classical'), dep.var.caption = 'Logged Play Share',out='2reg.html',title = 'Recession\'s Impact on Playshare by Genre: Special Cases')
+
+#This gives me the 2 unique genress stargazer table, everything is the same as above, just in it's own table because these two were special cases. Pop was special because of the idea of recession pop existing, I wanted to see if that was true. Classical was interesting because it had unusual behavior during recessions and went up on the graphs. 
+
+#this is the total plays genre regression, this should be the overall telltale regression to my project to see how listening changes during recessions if at all.
+stargazer(totalplayreg,logtotalplayreg, type = "html",dep.var.labels = c('',''),dep.var.caption = 'Total Plays', column.labels = c('Total Play<br>Change','% Change'),out='TotalPlayReg.html', title = 'Recession\'s Impact on Total Plays')
+
+#the column label trick was from below, the column names were close and i wanted to adjust them. The following links all helped me make my stargazer outputs look better.
+#https://stackoverflow.com/questions/62767214/r-stargazer-table-ascii-text-output-formatting-line-break-alignment-referenc
+#https://stackoverflow.com/questions/22056485/dependent-variable-labels-in-stargazer-tables 
+#https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf 
+
+```
