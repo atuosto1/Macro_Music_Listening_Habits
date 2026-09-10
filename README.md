@@ -84,11 +84,11 @@ Now that every artist is mapped to a genre, I looped back through each week, sum
 
 #### Screenshot 3.1 (Loop Structure)
 
-<img width="984" height="160" alt="image" src="https://github.com/user-attachments/assets/685f2486-d634-48b6-8466-91bff0a06e1c" />
+<img width="977" height="158" alt="image" src="https://github.com/user-attachments/assets/726f0582-6581-4c33-a55b-a66032cd8b89" />
 
 #### Screenshot 3.2 (DataFrame Export)
 
-<img width="448" height="430" alt="image" src="https://github.com/user-attachments/assets/d4d6228a-416c-4def-b9bf-7c39b2ca5e64" />
+<img width="450" height="539" alt="image" src="https://github.com/user-attachments/assets/03426ff8-153e-48a9-b322-67ac7dc04bf7" />
 
 #### Screenshot 3.3 (CSV Export)
 
@@ -103,7 +103,7 @@ Now that each of the genres had their play shares for each week, I needed to mer
 
 #### Screenshot 4.2 (Panel Merge and CSV Export)
 
-<img width="867" height="704" alt="image" src="https://github.com/user-attachments/assets/b6ee78a0-cbd8-46b8-8a3c-90c283a3b1d0" />
+<img width="867" height="713" alt="image" src="https://github.com/user-attachments/assets/04835495-701b-4eea-b06e-c13bb2e467b5" />
 
 #### Screenshot 4.3 (Final DataFrame)
 
