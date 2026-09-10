@@ -42,7 +42,7 @@ A free Last.fm API key [(get one here, requires account creation)](https://www.l
 
 
 ### Getting Data:
-The notebook pulls all Last.fm data live via API calls, though a full run will take a while due to the rate-limit delay. The notebook currently pulls weekly data for a single hardcoded Last.fm username. To reproduce for a different listener, swap the user= parameter in the API calls (a more efficient way to do this is to use f' strings and create a user variable that can easily be changed). FRED data is pulled live via fredapi and requires no manual downloads. I reference the .csv file I created when constructing the graphs. In order to avoid errors, replace my path name with your own file path.
+The notebook pulls all Last.fm data live via API calls, though a full run will take a while due to the rate-limit delay. The notebook currently pulls weekly data for a single hardcoded Last.fm username. To reproduce for a different listener, swap the user= parameter in the API calls (a more efficient way to do this is to use f' strings and create a user variable that can easily be changed). FRED data is pulled live via fredapi and requires no manual downloads. I reference the .csv file I created when constructing the graphs in Python and when running the regressions in R. In order to avoid errors, replace my path name with your own file path. All .csv files are included in this repository under "Data" folder.
 
 ## Methodology
 ### Step 1: Collect Weekly Listening Data
